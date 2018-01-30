@@ -1,24 +1,17 @@
 import React from 'react'
 import styled from 'styled-components'
 
-const renderInput = ({input, meta, name, label = ''}) => (
+const renderTimeInput = ({input, meta, name, label = ''}) => (
   <InputWrap>
-    <Label>{label}</Label>
     <Input error={meta.error && meta.touched} {...input} type="text" placeholder={label || 'Enter value...'}/>
     {meta.error && meta.touched && <Error>{meta.error}</Error>}
   </InputWrap>
 )
 
-export default renderInput
+export default renderTimeInput
 
 const InputWrap = styled.div`
-  display: flex;
-  flex-direction: column;
   margin-bottom: 10px;
-`
-
-const Label = styled.label`
-  font-weight: bold;
 `
 
 const Input = styled.input`
@@ -29,4 +22,5 @@ const Input = styled.input`
 
 const Error = styled.span`
   color: #db2525;
+  display:block;
 `

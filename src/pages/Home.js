@@ -1,17 +1,42 @@
-import React from 'react'
+import React, { Component } from 'react'
 import styled, { keyframes } from 'styled-components'
+import { connect } from 'react-redux'
+import { getEvents, getFormattedEvents, createEvent } from '../redux/events'
 import CalendarWrap from '../modules/Home/Components/CalendarWrap'
 import CalendarInput from '../modules/Home/Components/CalendarInput'
 
-const Home = () => (
-  <HomeWrapper>
-    <Title>Calendar using MERN Stack</Title>
-    <SideWrap>
-      <CalendarWrap/>
-      <CalendarInput/>
-    </SideWrap>
-  </HomeWrapper>
+@connect(
+  state => ({
+    events: getFormattedEvents(state),
+  }),
+  {getEvents, createEvent}
 )
+class Home extends Component {
+  componentWillMount () {
+    const {getEvents} = this.props
+    getEvents()
+  }
+
+  submitEvent = (event) => {
+    const {createEvent} = this.props
+    console.log(this.props)
+    console.log(event)
+    createEvent(event)
+  }
+
+  render () {
+    const {events} = this.props
+    return (
+      <HomeWrapper>
+        <Title>Calendar using MERN Stack</Title>
+        <SideWrap>
+          <CalendarWrap events={events}/>
+          <CalendarInput submitEvent={this.submitEvent}/>
+        </SideWrap>
+      </HomeWrapper>
+    )
+  }
+}
 
 export default Home
 

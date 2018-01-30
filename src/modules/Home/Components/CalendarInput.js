@@ -3,37 +3,82 @@ import styled from 'styled-components'
 import { Form, Field } from 'react-final-form'
 import { FORM_ERROR } from 'final-form'
 import renderInput from '../../Shared/Forms/input'
+import renderTimeInput from '../../Shared/Forms/time'
+import {
+  composeValidators,
+  required,
+  mustBeNumber,
+  validHour,
+  validMinute,
+  validTime,
+  getValidTime
+} from '../../Shared/Forms/validators'
 
-const composeValidators = (...validators) => value =>
-  validators.reduce((error, validator) => error || validator(value), undefined)
-const required = value => (value ? undefined : 'Required')
-const mustBeNumber = value => (isNaN(value) ? 'Must be a number' : undefined)
-
-const Fields = [
-  {name: 'event', label: 'Event', validate: required},
-  {name: 'timeFrom', label: 'Time From', validate: composeValidators(required, mustBeNumber)},
-  {name: 'timeTo', label: 'Time To', validate: composeValidators(required, mustBeNumber)},
-]
 class CalendarForm extends Component {
   submit = (values) => {
-    const {timeFrom, timeTo, event} = values
-    if (timeTo < timeFrom) {
-      return {
-        [FORM_ERROR]: `Validation error: Time To can be bigger than Time From`
-      }
+    const {title, timeFromHours, timeFromMinutes, timeToHours, timeToMinutes,} = values
+    const tFH = parseInt(timeFromHours)
+    const tFM = parseInt(timeFromMinutes)
+    const tTH = parseInt(timeToHours)
+    const tTM = parseInt(timeToMinutes)
+
+    const start = getValidTime(tFH, tFM)
+    const end = getValidTime(tTH, tTM)
+    const diff = end - start
+    console.log(diff)
+    if (diff < 0) {
+      return {[FORM_ERROR]: 'Validation error: Time To can be bigger than Time From'}
     }
     else {
-      alert(JSON.stringify(values))
+      const event = {
+        title,
+        start: (
+          tFH < 6
+            ? ((tFH + 4) * 60) + tFM
+            : ((tFH - 8) * 60) + tFM
+        ),
+        duration: (((tTH - tFH) * 60) + (tTM - tFM))
+      }
+
+      this.props.submitEvent(event)
     }
   }
 
   renderForm = ({handleSubmit, reset, submitting, pristine, values, submitError}) => (
     <form onSubmit={handleSubmit}>
-      {Fields.map(field => (
-        <Field validate={field.validate} key={'field_' + field.name} label={field.label} name={field.name}>
-          {renderInput}
+      <Field validate={required} label={'Event Title'} name={'title'}>
+        {renderInput}
+      </Field>
+      <Label> Time From </Label>
+      <TimeWrap>
+        <Field
+          label={'Enter hours'}
+          validate={composeValidators(required, mustBeNumber, validHour)}
+          name={'timeFromHours'}>
+          {renderTimeInput}
         </Field>
-      ))}
+        <Field
+          label={'Enter minutes'}
+          validate={composeValidators(required, mustBeNumber, validMinute)}
+          name={'timeFromMinutes'}>
+          {renderTimeInput}
+        </Field>
+      </TimeWrap>
+      <Label> Time To </Label>
+      <TimeWrap>
+        <Field
+          label={'Enter hours'}
+          validate={composeValidators(required, mustBeNumber, validHour)}
+          name={'timeToHours'}>
+          {renderTimeInput}
+        </Field>
+        <Field
+          label={'Enter minutes'}
+          validate={composeValidators(required, mustBeNumber, validMinute)}
+          name={'timeToMinutes'}>
+          {renderTimeInput}
+        </Field>
+      </TimeWrap>
       <button> Submit</button>
       {submitError && <SubmitError>{submitError}</SubmitError>}
     </form> )
@@ -62,7 +107,12 @@ const StyledForm = styled.form`
 
 `
 
-const Labels = styled.span`
+const TimeWrap = styled.div`
+  display: flex;
+  justify-content: space-between;
+`
+
+const Label = styled.span`
   font-weight: bold;
 `
 
