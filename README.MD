@@ -6,5 +6,5 @@ By creating simple event calendar app using react/redux/express/mongo stack you 
 ## How to
 1. `npm i`
 2. `npm run start`
-3. open `localhost: 3000`
+3. open `localhost:3000`
 
