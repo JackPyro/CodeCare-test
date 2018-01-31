@@ -6,7 +6,7 @@ const config = require('./config')
 module.exports = {
   entry: [
     'react-hot-loader/patch',
-    'webpack-dev-server/client?http://localhost:4000',
+    'webpack-dev-server/client?http://localhost:' + config.PORT,
     'webpack/hot/only-dev-server',
     './src/index.js',
   ],
@@ -57,7 +57,7 @@ module.exports = {
     host: 'localhost',
     historyApiFallback: true,
     publicPath: '/',
-    port: 4000,
+    port: config.PORT,
     proxy: [
       {
         path: '/api',
