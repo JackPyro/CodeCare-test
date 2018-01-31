@@ -2,13 +2,16 @@ import React, { Component } from 'react'
 import styled from 'styled-components'
 
 class CalendarWrap extends Component {
-
   isSmall = (index) => index % 2 !== 0
+
+  select = (event) => {
+    this.props.select(event)
+  }
 
   render () {
     const first_row = ['8:00', '8:30', '9:00', '9:30', '10:00', '10:30', '11:00', '11:30', '12:00', '12:30']
     const second_row = ['1:00', '1:30', '2:00', '2:30', '3:00', '3:30', '4:00', '4:30', '5:00']
-    const {events} = this.props
+    const {events = [], selected = null} = this.props
     return (
       <Wrapper>
         <Row>
@@ -20,7 +23,12 @@ class CalendarWrap extends Component {
             </TimeWrap>
           )}
           {events.map(event =>
-            <Entry time={event.start} duration={event.duration} width={event.width}
+            <Entry onClick={() => this.select(event)}
+                   key={event._id}
+                   selected={selected && selected._id === event._id}
+                   time={event.start}
+                   duration={event.duration}
+                   width={event.width}
                    offset={event.offset}><Label>{event.title} {event.start}/{event.duration}</Label></Entry>
           )}
         </Row>
@@ -32,7 +40,12 @@ class CalendarWrap extends Component {
             </TimeWrap>
           )}
           {events.map(event =>
-            <Entry time={event.start} duration={event.duration} width={event.width}
+            <Entry onClick={() => this.select(event)}
+                   key={event._id}
+                   selected={selected && selected._id === event._id}
+                   time={event.start}
+                   duration={event.duration}
+                   width={event.width}
                    offset={event.offset}><Label>{event.title} {event.start}/{event.duration}</Label></Entry>
           )}
         </Row>
@@ -76,7 +89,7 @@ const Entry = styled.div`
   top: ${({time}) => time > 20 ? (time * 50 / 30) : time}px; 
   left: 40px;
   width: ${({width}) => width ? 200 / width : 200}px;
-  background-color: #E2ECF5;
+  background-color: ${({selected}) => selected ? '#647ef5' : '#E2ECF5' };
   font-size: 14px;
   height: ${({duration, time}) => duration ? (50 * duration / 30) : 14}px;
   border-left: 2px solid #6E9ECF;

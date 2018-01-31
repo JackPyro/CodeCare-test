@@ -1,0 +1,21 @@
+{
+  "presets": [
+    [
+      "env",
+      {
+        "targets": {
+          "browsers": [
+            "last 2 Chrome versions"
+          ]
+        }
+      }
+    ],
+    "stage-0"
+  ],
+  "plugins": [
+    "transform-class-properties",
+    "react-html-attrs",
+    "transform-decorators-legacy",
+    "transform-async-to-generator"
+  ]
+}

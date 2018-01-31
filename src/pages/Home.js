@@ -1,37 +1,56 @@
 import React, { Component } from 'react'
 import styled, { keyframes } from 'styled-components'
 import { connect } from 'react-redux'
-import { getEvents, getFormattedEvents, createEvent } from '../redux/events'
+import { getEvents, isLoggedIn, getFormattedEvents, createEvent, getUser } from '../redux/events'
 import CalendarWrap from '../modules/Home/Components/CalendarWrap'
 import CalendarInput from '../modules/Home/Components/CalendarInput'
+import CalendarItem from '../modules/Home/Components/CalendarItem'
 
 @connect(
   state => ({
     events: getFormattedEvents(state),
+    user: getUser(state),
+    isLogged: isLoggedIn(state),
   }),
   {getEvents, createEvent}
 )
 class Home extends Component {
+  constructor () {
+    super()
+    this.state = {selected: null}
+  }
+
   componentWillMount () {
-    const {getEvents} = this.props
-    getEvents()
+    const {getEvents, isLogged, history} = this.props
+    if (isLogged) {
+      getEvents()
+    } else {
+      history.push('/login')
+    }
+  }
+
+  select = (event) => {
+    this.setState({selected: event})
   }
 
   submitEvent = (event) => {
-    const {createEvent} = this.props
-    console.log(this.props)
-    console.log(event)
-    createEvent(event)
+    const {createEvent, user} = this.props
+    createEvent(event, user._id)
   }
 
   render () {
     const {events} = this.props
+    const {selected} = this.state
     return (
       <HomeWrapper>
         <Title>Calendar using MERN Stack</Title>
         <SideWrap>
-          <CalendarWrap events={events}/>
-          <CalendarInput submitEvent={this.submitEvent}/>
+          <CalendarWrap events={events} select={this.select} selected={selected}/>
+          {selected && selected._id
+            ? <CalendarItem event={selected}/>
+            : <CalendarInput submitEvent={this.submitEvent}/>
+          }
+
         </SideWrap>
       </HomeWrapper>
     )

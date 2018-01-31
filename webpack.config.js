@@ -1,11 +1,12 @@
 const path = require('path')
 const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const config = require('./config')
 
 module.exports = {
   entry: [
     'react-hot-loader/patch',
-    'webpack-dev-server/client?http://localhost:3000',
+    'webpack-dev-server/client?http://localhost:4000',
     'webpack/hot/only-dev-server',
     './src/index.js',
   ],
@@ -20,11 +21,16 @@ module.exports = {
         use: {
           loader: 'babel-loader',
           options: {
-            presets: ['env', 'react', 'stage-0'],
+            presets: [['env', {
+              'targets': {
+                'browsers': ['last 2 Chrome versions']
+              }
+            }], 'react', 'stage-0'],
             plugins: [
               'transform-class-properties',
               'react-html-attrs',
-              'transform-decorators-legacy'
+              'transform-decorators-legacy',
+              'transform-async-to-generator'
             ],
           }
         },
@@ -52,6 +58,16 @@ module.exports = {
     historyApiFallback: true,
     publicPath: '/',
     port: 4000,
+    proxy: [
+      {
+        path: '/api',
+        target: `http://${config.HOST}:${config.API}/api`,
+        changeOrigin: true,
+        pathRewrite: {
+          '^/api': ''
+        }
+      },
+    ]
   },
   resolve: {
     alias: {
