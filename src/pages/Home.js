@@ -1,10 +1,19 @@
 import React, { Component } from 'react'
 import styled, { keyframes } from 'styled-components'
 import { connect } from 'react-redux'
-import { getEvents, isLoggedIn, getFormattedEvents, createEvent, getUser } from '../redux/events'
+import {
+  getEvents,
+  isLoggedIn,
+  getFormattedEvents,
+  createEvent,
+  getUser,
+  deleteEvent,
+  exportEvents
+} from '../redux/events'
 import CalendarWrap from '../modules/Home/Components/CalendarWrap'
 import CalendarInput from '../modules/Home/Components/CalendarInput'
 import CalendarItem from '../modules/Home/Components/CalendarItem'
+import ItemOptions from '../modules/Home/Components/ItemOptions'
 
 @connect(
   state => ({
@@ -12,7 +21,7 @@ import CalendarItem from '../modules/Home/Components/CalendarItem'
     user: getUser(state),
     isLogged: isLoggedIn(state),
   }),
-  {getEvents, createEvent}
+  {getEvents, createEvent, deleteEvent, exportEvents}
 )
 class Home extends Component {
   constructor () {
@@ -27,6 +36,14 @@ class Home extends Component {
     } else {
       history.push('/login')
     }
+  }
+
+  deleteEvent = (id) => {
+    this.props.deleteEvent(id)
+  }
+
+  exportEvents = () => {
+    this.props.exportEvents()
   }
 
   select = (event) => {
@@ -46,11 +63,18 @@ class Home extends Component {
         <Title>Calendar using MERN Stack</Title>
         <SideWrap>
           <CalendarWrap events={events} select={this.select} selected={selected}/>
-          {selected && selected._id
-            ? <CalendarItem event={selected}/>
-            : <CalendarInput submitEvent={this.submitEvent}/>
-          }
-
+          <RightSide>
+            <ItemOptions
+              selected={selected}
+              select={this.select}
+              deleteEvent={this.deleteEvent}
+              exportEvents={this.exportEvents}
+            />
+            {selected && selected._id
+              ? <CalendarItem event={selected}/>
+              : <CalendarInput submitEvent={this.submitEvent}/>
+            }
+          </RightSide>
         </SideWrap>
       </HomeWrapper>
     )
@@ -61,6 +85,10 @@ export default Home
 
 const HomeWrapper = styled.div`
 
+`
+
+const RightSide = styled.div`
+  width: 100%;
 `
 
 const SideWrap = styled.div`

@@ -45,7 +45,6 @@ function run () {
     console.error(
       '==>     ERROR: No PORT environment variable has been specified'
     )
-    console.log('config', config)
   }
 
   app.use(function (req, res, next) {

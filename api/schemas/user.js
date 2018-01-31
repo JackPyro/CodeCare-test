@@ -28,9 +28,7 @@ schema.pre('save', function (next) {
 })
 
 schema.methods.isValidPassword = async function (password) {
-  console.log(password, this.password)
   const result = await bcrypt.compare(password, this.password)
-  console.log(result)
   return result
 }
 

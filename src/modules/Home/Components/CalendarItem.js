@@ -7,15 +7,19 @@ class CalendarItem extends Component {
     const {event} = this.props
     return (
       <Wrapper>
-        {JSON.stringify(event)}
+        <h4><strong>Title: </strong>{event.title}</h4>
+        <div><strong> Start: </strong>{event.startTime}</div>
+        <div><strong> EndTime: </strong>{event.endTime}</div>
       </Wrapper>
     )
   }
 }
 
 const Wrapper = styled.div`
-  display: flex;
-  margin-top: 10px;
+  width:100%;
+  padding: 0px 15px;
+  background-color: rgba(0,0,0,0.05);
+  padding-bottom: 40px;
 `
 
 const Row = styled.div`

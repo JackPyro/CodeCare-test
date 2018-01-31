@@ -22,14 +22,18 @@ class CalendarWrap extends Component {
 
             </TimeWrap>
           )}
-          {events.map(event =>
+          {events.left.map(event =>
             <Entry onClick={() => this.select(event)}
                    key={event._id}
                    selected={selected && selected._id === event._id}
                    time={event.start}
-                   duration={event.duration}
+                   duration={(event.start + event.duration > 300) ? 300 - event.start : event.duration}
                    width={event.width}
-                   offset={event.offset}><Label>{event.title} {event.start}/{event.duration}</Label></Entry>
+                   offset={event.offset}>
+              <Label hidden={false}>
+                {event.title}
+              </Label>
+            </Entry>
           )}
         </Row>
         <Row>
@@ -39,14 +43,20 @@ class CalendarWrap extends Component {
               <Time small={this.isSmall(index)}>{time}</Time>
             </TimeWrap>
           )}
-          {events.map(event =>
+          {events.right.map(event =>
             <Entry onClick={() => this.select(event)}
                    key={event._id}
                    selected={selected && selected._id === event._id}
-                   time={event.start}
-                   duration={event.duration}
+                   time={event.start <= 0 ? 0 : event.start}
+                   duration={event.start <= 0 ? (event.duration - (300 - event.original)) : event.duration}
                    width={event.width}
-                   offset={event.offset}><Label>{event.title} {event.start}/{event.duration}</Label></Entry>
+                   offset={event.offset}>
+              <Label
+                width={event.width}
+                hidden={event.start <= 0}>
+                {event.title}
+              </Label>
+            </Entry>
           )}
         </Row>
       </Wrapper>
@@ -61,7 +71,7 @@ const Wrapper = styled.div`
 
 const Row = styled.div`
   position: relative;
-  width: 240px;
+  width: 250px;
   margin-right: 20px;
 `
 
@@ -87,17 +97,22 @@ const TimeWrap = styled.div`
 const Entry = styled.div`
   position: absolute;
   top: ${({time}) => time > 20 ? (time * 50 / 30) : time}px; 
-  left: 40px;
-  width: ${({width}) => width ? 200 / width : 200}px;
+  left: 50px;
+  width: ${({width}) => width ? (200 / width) : 200}px;
   background-color: ${({selected}) => selected ? '#647ef5' : '#E2ECF5' };
   font-size: 14px;
-  height: ${({duration, time}) => duration ? (50 * duration / 30) : 14}px;
+  height: ${({duration}) => duration ? (50 * duration / 30) : 14}px;
   border-left: 2px solid #6E9ECF;
   margin-left: ${({offset, width}) => offset ? offset * (200 / width) : 0}px;
 `
 
 const Label = styled.div`
+  display: ${props => props.hidden ? 'none' : 'block'};
   padding: 4px;
+  width: ${({width}) => width ? (200 / width - 20) + 'px' : 'auto' };
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `
 
 export default CalendarWrap

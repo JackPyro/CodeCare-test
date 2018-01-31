@@ -25,11 +25,11 @@ class CalendarForm extends Component {
     const start = getValidTime(tFH, tFM)
     const end = getValidTime(tTH, tTM)
     const diff = end - start
-    console.log(diff)
     if (diff < 0) {
       return {[FORM_ERROR]: 'Validation error: Time To can be bigger than Time From'}
     }
     else {
+
       const event = {
         title,
         start: (
@@ -37,9 +37,14 @@ class CalendarForm extends Component {
             ? ((tFH + 4) * 60) + tFM
             : ((tFH - 8) * 60) + tFM
         ),
-        duration: (((tTH - tFH) * 60) + (tTM - tFM))
+        duration: (
+          tTH < 6
+            ? (((tTH + 12) - tFH) * 60) + (tTM - tFM)
+            : (((tTH - tFH) * 60) + (tTM - tFM))
+        ),
+        startTime: `${tFH}:${tFM < 10 ? '0' + tFM : tFM}`,
+        endTime: `${tTH}:${tTM < 10 ? '0' + tTM : tTM}`
       }
-
       this.props.submitEvent(event)
     }
   }

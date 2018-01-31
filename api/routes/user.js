@@ -15,7 +15,6 @@ router.post('/', (req, res, next) => {
     return res.send({error: 'Login failed'})
   }
   User.findOne({username: username}).then(user => {
-    console.log(user)
     if (!user) {
       User.create({username, password})
         .then(newUser => {
@@ -36,7 +35,7 @@ router.post('/login', passport.authenticate('local', {session: true}), (req, res
   if (req.user) {
     res.send({user: req.user})
   } else {
-    res.send({error: 'Error occured'})
+    res.send({error: 'Error occurred'})
   }
 
 })
