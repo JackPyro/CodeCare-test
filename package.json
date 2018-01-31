@@ -4,8 +4,9 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "start": "./node_modules/.bin/webpack-dev-server",
-    "api": "node bin/api.js ",
+    "start": "concurrently \"npm run start-dev\" \"npm run start-api\"",
+    "start-dev": "./node_modules/.bin/webpack-dev-server",
+    "start-api": "node bin/api.js ",
     "build": "./node_modules/.bin/webpack --config webpack.config.production"
   },
   "dependencies": {
@@ -30,7 +31,6 @@
     "passport": "^0.4.0",
     "passport-http": "^0.3.0",
     "passport-local": "^1.0.0",
-    "passport-local-mongoose": "^4.4.0",
     "piping": "^1.0.0-rc.4",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",

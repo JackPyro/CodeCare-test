@@ -1,23 +1,10 @@
-# React Redux KLPQ
+# Core&Care test project
 
-## Install
+## Goal
+By creating simple event calendar app using react/redux/express/mongo stack you should demonstrate your awareness of how to work with related technologies.
 
-
-`yarn install`
-
-`yarn run start`
-
-## Deps
-
-
-1.React
-
-2.Redux
-
-3.React-Router
-
-4.Styled-Components
-
-5.Decorators
-
+## How to
+1. `npm i`
+2. `npm run start`
+3. open `localhost: 3000`
 

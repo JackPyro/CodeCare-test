@@ -24,7 +24,7 @@ function run () {
 
   require('./passport')
 
-  mongoose.connect(`mongodb://${config.DB.host}:${config.DB.port}/${confid.DB.collection}`)
+  mongoose.connect(`mongodb://${config.DB.host}:${config.DB.port}/${config.DB.collection}`)
   if (config.API) {
     routes.map(route => {
       console.info(`adding ${route.name}`)
